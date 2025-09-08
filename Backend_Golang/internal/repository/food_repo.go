@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"errors" // Add this import for error handling
+	"fmt"    // Add this import for formatting errors
 	"github.com/Paya-4970/telegram-crud/internal/models"
 	"gorm.io/gorm"
 )
@@ -20,9 +22,16 @@ func NewFoodRepo(db *gorm.DB) FoodRepository {
 }
 
 func (r *foodRepo) FindByName(name string) (*models.Food, error) {
+	if name == "" {
+		return nil, errors.New("food name cannot be empty")
+	}
+
 	var food models.Food
 	if err := r.db.Where("name = ?", name).First(&food).Error; err != nil {
-		return nil, err
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil // Return nil if no record is found
+		}
+		return nil, fmt.Errorf("failed to find food by name: %w", err)
 	}
 	return &food, nil
 }

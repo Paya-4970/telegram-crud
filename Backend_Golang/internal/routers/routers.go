@@ -7,10 +7,12 @@ import (
 )
 
 func InitRouter(e *gin.Engine, a *app.App) {
-	v1 := e.Group("food")
+	foodGroup := e.Group("/food") // Grouping food-related routes
 	{
-		v1.GET("/get/:id", a.FoodHnadlers.Get)
-		v1.GET("/list", a.FoodHnadlers.List)
-		v1.GET("/get/name/:name", a.FoodHnadlers.GetByName)
+		foodGroup.GET("/get/:id", a.FoodHnadlers.Get)
+		foodGroup.GET("/get/:id", a.FoodHnadlers.Get)           // Get food by ID
+		foodGroup.GET("/list", a.FoodHnadlers.List)             // List all foods
+		foodGroup.GET("/get/name/:name", a.FoodHnadlers.GetByName) // Get food by name
 	}
 }
+
